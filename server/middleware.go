@@ -17,7 +17,6 @@ type statusResponseWriter struct {
 func (w *statusResponseWriter) WriteHeader(status int) {
 	w.status = status
 	w.ResponseWriter.WriteHeader(status)
-
 }
 
 func colorLog(marker, method string, path string, statusCode int, duration time.Duration) string {

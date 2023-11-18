@@ -25,14 +25,26 @@ type Server struct {
 }
 
 func (s *Server) Start() {
-	// Log startup message
 	s.logStartupMessage()
 
-	// Start the server
 	err := http.ListenAndServe(":8080", s.Router)
 	if err != nil {
 		s.Logger.Error(fmt.Sprintf("Failed to start server: %v", err))
 		os.Exit(1)
+	}
+}
+
+func NewServer(router *chi.Mux, logger *logger.Logger, config config.EnvConfig) ServerInterface {
+	return &Server{
+		Router: router,
+		Logger: logger,
+		Config: config,
+	}
+}
+
+func (s *Server) RegisterMiddlewares() {
+	if s.Config.IsDevelopment {
+		s.Router.Use(ColorLoggingMiddleware)
 	}
 }
 
@@ -52,18 +64,4 @@ func (s *Server) logStartupMessage() {
 	s.Logger.Info("🚀 Application is running on: http://localhost:8080/")
 	s.Logger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	s.Logger.Info("")
-}
-
-func NewServer(router *chi.Mux, logger *logger.Logger, config config.EnvConfig) ServerInterface {
-	return &Server{
-		Router: router,
-		Logger: logger,
-		Config: config,
-	}
-}
-
-func (s *Server) RegisterMiddlewares() {
-	if s.Config.IsDevelopment {
-		s.Router.Use(ColorLoggingMiddleware)
-	}
 }

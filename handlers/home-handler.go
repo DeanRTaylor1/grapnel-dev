@@ -28,3 +28,20 @@ func ServeHome(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+
+func ServeFaq(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
+	logger.Debug("Accessed route: '/faq'")
+
+	tmpl, err := template.ParseFS(content, "templates/*.html")
+	if err != nil {
+		panic(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	err = tmpl.ExecuteTemplate(w, "faq.html", nil)
+	if err != nil {
+		logger.Error(fmt.Sprintf("Error rendering HTML template: %s", err))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
