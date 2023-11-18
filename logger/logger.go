@@ -3,14 +3,14 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"time"
 )
 
-type Logger struct {
-	debugFile *os.File
-	errorFile *os.File
+type FileHandler struct {
+	file *os.File
 }
 
 type LogEntry struct {
@@ -19,53 +19,26 @@ type LogEntry struct {
 	Level     string    `json:"level"`
 }
 
-func NewLogger(logDir string) (*Logger, error) {
-	debugDir := filepath.Join(logDir, "debug")
-	errorDir := filepath.Join(logDir, "error")
-
-	if err := os.MkdirAll(debugDir, os.ModePerm); err != nil {
-		return nil, err
-	}
-
-	if err := os.MkdirAll(errorDir, os.ModePerm); err != nil {
-		return nil, err
-	}
-
-	debugFile, err := createLogFile(debugDir, "debug")
-	if err != nil {
-		return nil, err
-	}
-
-	errorFile, err := createLogFile(errorDir, "error")
-	if err != nil {
-		debugFile.Close()
-		return nil, err
-	}
-
-	return &Logger{
-		debugFile: debugFile,
-		errorFile: errorFile,
-	}, nil
-}
-
-func createLogFile(logDir, logType string) (*os.File, error) {
+func NewFileHandler(logDir, logType string) (*FileHandler, error) {
 	today := time.Now().Format("2006-01-02")
 	logFileName := fmt.Sprintf("%s.log", today)
-	logFilePath := filepath.Join(logDir, logFileName)
+	logFilePath := filepath.Join(logDir, logType, logFileName)
 
 	file, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		return nil, err
 	}
 
-	return file, nil
+	return &FileHandler{
+		file: file,
+	}, nil
 }
 
-func (l *Logger) logToFile(file *os.File, level, message string) {
+func (fh *FileHandler) Log(r *slog.Record) {
 	entry := LogEntry{
-		Timestamp: time.Now(),
-		Message:   message,
-		Level:     level,
+		Timestamp: r.Time,
+		Message:   r.Message,
+		Level:     r.Level.String(),
 	}
 
 	logJSON, err := json.Marshal(entry)
@@ -76,18 +49,57 @@ func (l *Logger) logToFile(file *os.File, level, message string) {
 
 	logJSON = append(logJSON, '\n')
 
-	_, err = file.Write(logJSON)
+	_, err = fh.file.Write(logJSON)
 	if err != nil {
 		fmt.Println("Error writing log entry:", err)
 	}
 }
 
+func (fh *FileHandler) Close() {
+	if fh.file != nil {
+		fh.file.Close()
+	}
+}
+
+type Logger struct {
+	debugHandler *FileHandler
+	errorHandler *FileHandler
+}
+
+func NewLogger(logDir string) (*Logger, error) {
+	debugHandler, err := NewFileHandler(logDir, "debug")
+	if err != nil {
+		return nil, err
+	}
+
+	errorHandler, err := NewFileHandler(logDir, "error")
+	if err != nil {
+		debugHandler.Close()
+		return nil, err
+	}
+
+	return &Logger{
+		debugHandler: debugHandler,
+		errorHandler: errorHandler,
+	}, nil
+}
+
+func (l *Logger) logToHandler(handler *FileHandler, level, message string) {
+	record := &slog.Record{
+		Time:    time.Now(),
+		Level:   slog.Level(0),
+		Message: message,
+	}
+
+	handler.Log(record)
+}
+
 func (l *Logger) Debug(message string) {
-	l.logToFile(l.debugFile, "DEBUG", message)
+	l.logToHandler(l.debugHandler, "DEBUG", message)
 }
 
 func (l *Logger) Error(message string) {
-	l.logToFile(l.errorFile, "ERROR", message)
+	l.logToHandler(l.errorHandler, "ERROR", message)
 }
 
 func (l *Logger) Info(message string) {
@@ -95,11 +107,11 @@ func (l *Logger) Info(message string) {
 }
 
 func (l *Logger) Close() {
-	if l.debugFile != nil {
-		l.debugFile.Close()
+	if l.debugHandler != nil {
+		l.debugHandler.Close()
 	}
-	if l.errorFile != nil {
-		l.errorFile.Close()
+	if l.errorHandler != nil {
+		l.errorHandler.Close()
 	}
 }
 

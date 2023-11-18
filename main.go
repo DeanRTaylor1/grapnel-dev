@@ -8,7 +8,7 @@ import (
 	"github.com/DeanRTaylor1/deans-site/config"
 	"github.com/DeanRTaylor1/deans-site/logger"
 	"github.com/DeanRTaylor1/deans-site/server"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
