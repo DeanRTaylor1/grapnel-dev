@@ -19,12 +19,12 @@ func main() {
 
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatal("Can not get current directory")
+		log.Fatalf("Can not get current directory. Error: %s", err.Error())
 	}
 
 	l, err := logger.NewLogger(fmt.Sprintf("%s%s", cwd, "/logs"))
 	if err != nil {
-		log.Fatal("Unable to initialise logger.")
+		log.Fatalf("Error initialising logger. Error: %s", err.Error())
 	}
 
 	s := server.NewServer(r, l, config)

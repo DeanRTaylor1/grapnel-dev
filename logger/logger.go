@@ -22,7 +22,12 @@ type LogEntry struct {
 func NewFileHandler(logDir, logType string) (*FileHandler, error) {
 	today := time.Now().Format("2006-01-02")
 	logFileName := fmt.Sprintf("%s.log", today)
+
 	logFilePath := filepath.Join(logDir, logType, logFileName)
+
+	if err := os.MkdirAll(filepath.Join(logDir, logType), 0755); err != nil {
+		return nil, err
+	}
 
 	file, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
