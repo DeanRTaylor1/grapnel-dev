@@ -14,8 +14,20 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 		handlers.ServeHome(w, r, s.Logger)
 	})
 
+	router.Get("/styles/output.css", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeCss(w, r, s.Logger)
+	})
+
 	router.Get("/faq", func(w http.ResponseWriter, r *http.Request) {
 		handlers.ServeFaq(w, r, s.Logger)
+	})
+
+	router.Get("/about", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeAbout(w, r, s.Logger)
+	})
+
+	router.Get("/fonts/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeFonts(w, r, s.Logger)
 	})
 
 	// Serve static files
