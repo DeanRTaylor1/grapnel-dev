@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -17,6 +16,7 @@ type EnvConfig struct {
 	BaseUrl       string
 	Port          string
 	Api_Version   string
+	Mongo_Uri     string
 }
 
 var Env EnvConfig
@@ -26,7 +26,7 @@ func LoadEnv() {
 	if err != nil {
 		log.Fatalf("Error getting current working directory. Error: %s", err.Error())
 	}
-	projectRoot := filepath.Join(currentDir, "..")
+	projectRoot := filepath.Join(currentDir)
 
 	env := os.Getenv("GO_ENV")
 	if env == "" {
@@ -34,7 +34,6 @@ func LoadEnv() {
 		env = "development"
 	}
 
-	fmt.Println(projectRoot)
 	if env != "production" {
 		envFilePath := filepath.Join(projectRoot, ".env."+env+".local")
 		err := godotenv.Load(envFilePath)
@@ -50,6 +49,7 @@ func LoadEnv() {
 		IsDevelopment: getEnv("GO_ENV", "development") == "development",
 		BaseUrl:       getEnv("BASE_URL", "http://localhost"),
 		Port:          getEnv("PORT", "8080"),
+		Mongo_Uri:     getEnv("MONGO_URI", ""),
 		Api_Version:   getEnv("API_VERSION", "v1"),
 	}
 }

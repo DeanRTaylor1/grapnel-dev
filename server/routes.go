@@ -30,6 +30,26 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 		handlers.ServeFonts(w, r, s.Logger)
 	})
 
+	router.Get("/images/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeImages(w, r, s.Logger)
+	})
+
+	router.Get("/blogs", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeBlog(w, r, s.Logger)
+	})
+
+	router.Get("/blogs/data", func(w http.ResponseWriter, r *http.Request) {
+		handlers.GetBlogs(w, r, s.Logger)
+	})
+
+	router.Get("/blogs/{id}", func(w http.ResponseWriter, r *http.Request) {
+		// Retrieve the captured blog post ID from the URL
+		blogID := chi.URLParam(r, "id")
+
+		// Call a handler function to handle the request with the blogID
+		handlers.GetBlogByID(w, r, s.Logger, blogID)
+	})
+
 	// Serve static files
 	staticDir := getStaticDir()
 	staticFileServer := http.FileServer(http.Dir(staticDir))

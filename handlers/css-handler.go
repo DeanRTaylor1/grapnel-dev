@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+	"time"
 
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
@@ -21,9 +22,11 @@ func ServeCss(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		logger.Error(fmt.Sprintf("Error reading embedded CSS file: %s", err.Error()))
 		return
-	}
+	}	
+	
+	cacheDuration := 24 * time.Hour 
+	SetCacheHeaders(w, ContentTypeCSS, cacheDuration, "output.css")
 
-	w.Header().Set("Content-Type", "text/css")
 	w.WriteHeader(http.StatusOK)
 	w.Write(styles)
 }
@@ -41,7 +44,9 @@ func ServeFonts(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "font/opentype")
+	cacheDuration := 24 * time.Hour 
+	SetCacheHeaders(w, ContentTypeFontOpen, cacheDuration, fontFilename)
+
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(fontFile)
