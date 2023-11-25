@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{template "head.html" .}}
+  </head>
+  <script>
+    var currentPage = 1;
+    var totalBlogs = {{ .BlogCount }};
+
+    function loadMoreBlogs() {
+        currentPage++;
+        var url = '/blogs/data?page=' + currentPage;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(blog => {
+                    var blogHtml = `
+                        <a href="${blog.Href}" class="flex flex-col gap-4 rounded-md border border-solid border-[#cdcdcd] px-4 py-8 md:p-0">
+                            <img src="${blog.ImageUri}" alt="" class="h-60 object-cover" />
+                            <div class="px-6 py-4">
+                                <p class="mb-4 text-sm font-semibold uppercase text-[#636262]">${blog.Topic}</p>
+                                <p class="mb-4 text-xl font-semibold">${blog.Title}</p>
+                                <p class="mb-6 text-sm text-[#636262] sm:text-base lg:mb-8">${blog.Intro}</p>
+                                <div class="flex">
+                                    <div class="flex flex-col">
+                                        <div class="flex flex-col lg:flex-row lg:gap-12">
+                                            <p class="text-sm text-[#636262]">${new Date(blog.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                                            <p class="text-sm text-[#636262]">${blog.ReadTime}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>`;
+                    document.getElementById('blog-container').insertAdjacentHTML('beforeend', blogHtml);
+                });
+                if (currentPage * 3 >= totalBlogs) {
+                    document.getElementById('view-more').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading more blogs:', error);
+            });
+    }
+  </script>
+
+  <body>
+    <!-- Navbar Dropdown 1 row -->
+    <section>{{ template "header.html" }}</section>
+
+    <main>
+      <section>
+        <!-- Container -->
+        <div
+          class="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-24 lg:py-32"
+        >
+          <!-- Component -->
+          <div class="flex flex-col items-center">
+            <h2 class="text-center text-3xl font-bold md:text-5xl">
+              Sys D Blogs
+            </h2>
+            <p
+              class="mb-8 mt-4 text-center text-sm text-[#636262] sm:text-base md:mb-12 lg:mb-16"
+            >
+              Giving our customers great advice
+            </p>
+            <!-- Content -->
+            <div
+              x-data="{ currentPage: 1, totalBlogs: {{ .BlogCount }} }"
+              id="blog-container"
+              class="mb-6 grid gap-4 sm:grid-cols-2 sm:justify-items-stretch md:mb-10 md:grid-cols-3 lg:mb-12 lg:gap-6"
+            >
+              {{ range .Blogs }}
+              <a
+                href="{{ .Href }}"
+                class="flex flex-col gap-4 rounded-md border border-solid border-[#cdcdcd] px-4 py-8 md:p-0"
+              >
+                <img src="{{ .ImageUri }}" alt="" class="h-60 object-cover" />
+                <div class="px-6 py-4">
+                  <p
+                    class="mb-4 text-sm font-semibold uppercase text-[#636262]"
+                  >
+                    {{ .Topic }}
+                  </p>
+                  <p class="mb-4 text-xl font-semibold">{{ .Title }}</p>
+                  <p class="mb-6 text-sm text-[#636262] sm:text-base lg:mb-8">
+                    {{ .Intro }}
+                  </p>
+                  <div class="flex">
+                    <div class="flex flex-col">
+                      <div class="flex flex-col lg:flex-row lg:gap-12">
+                        <p class="text-sm text-[#636262]">{{ .Date }}</p>
+                        <p class="text-sm text-[#636262]">{{ .ReadTime }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              {{ end }}
+            </div>
+            <!-- Button -->
+            <a
+              href="javascript:void(0)"
+              class="rounded-md bg-black px-6 py-3 text-center font-semibold text-white"
+              onclick="loadMoreBlogs()"
+              id="view-more"
+            >
+              View More
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="block">{{template "footer.html"}}</footer>
+  </body>
+</html>

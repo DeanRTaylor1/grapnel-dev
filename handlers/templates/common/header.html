@@ -1,0 +1,94 @@
+<div class="h-auto w-screen">
+  <!-- NAVBAR -->
+  <nav
+    class="font-inter mx-auto h-auto w-full max-w-[1600px] lg:relative lg:top-0"
+    x-data="{isOpen: false, menuOne:false}"
+  >
+    <!-- CONTAINER -->
+    <div
+      class="flex flex-col px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-4 xl:px-20 transition-all duration-300 ease-in-out"
+    >
+      <a href="/" class="font-bold flex items-center">
+        <i
+          class="fa-solid fa-play fa-rotate-90 fa-2xs"
+          style="color: #000000"
+        ></i>
+        <p class="text-lg tracking-widest mx-1">Sys.d Solutions</p>
+      </a>
+
+      <!-- MENU CONTENT 1 -->
+      <div
+        class="mt-14 flex flex-col gap-8 lg:mt-0 lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 justify-center items-center"
+        x-bind:class="isOpen ? 'show' : 'hidden'"
+      >
+        <a
+          href="/"
+          class="rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          >Home</a
+        >
+        <a
+          href="/about"
+          class="font-Gilroy rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 transition lg:hover:text-[#d6a701]"
+          >About</a
+        >
+        <a
+          href="/faq"
+          class="rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          >Portfolio</a
+        >
+        <a
+          href="/blogs"
+          class="mb-6 font-inter rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          >Blog</a
+        >
+      </div>
+      <!-- MENU CONTENT 2 -->
+      <div
+        class="pl-4 flex flex-col space-y-8 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 justify-between"
+        x-bind:class="isOpen ? 'show' : 'hidden'"
+      >
+        <a
+          href="#"
+          class="relative mr-5 inline-block rounded-xl border border-[#1353FE] bg-white px-8 py-4 text-center font-semibold text-[#1353FE] [box-shadow:rgb(0,0,0)_6px_6px] hover:border-black md:mr-6"
+          >Get In Touch</a
+        >
+      </div>
+      <!-- BURGER MENU -->
+      <a
+        href="#"
+        class="absolute right-5 lg:hidden"
+        x-on:click.prevent="isOpen = !isOpen"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.75 12H20.25"
+            stroke="#160042"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M3.75 6H20.25"
+            stroke="#160042"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M3.75 18H20.25"
+            stroke="#160042"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </div>
+  </nav>
+</div>

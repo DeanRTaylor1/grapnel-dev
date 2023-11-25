@@ -7,6 +7,7 @@
   src: url("/fonts/Gilroy-ExtraBold.otf") format("opentype");
   font-weight: 800;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -14,8 +15,9 @@
   src: url("/fonts/Gilroy-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 body {
-  font-family: "Gilroy", sans-serif;
+  font-family: "Gilroy", Verdana, sans-serif;
 }

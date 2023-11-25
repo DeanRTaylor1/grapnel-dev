@@ -4,3 +4,5 @@ build-css:
 	./tailwindcss -i ./handlers/templates/input.css -o ./handlers/styles/output.css
 test:
 	go test -cover ./...
+build:
+	docker build -t sysd .
