@@ -27,7 +27,7 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 	})
 
 	router.Get("/fonts/*", func(w http.ResponseWriter, r *http.Request) {
-		handlers.ServeFonts(w, r, s.Logger)
+		handlers.ServeFonts(w, r, s.Logger, s.Config)
 	})
 
 	router.Get("/images/*", func(w http.ResponseWriter, r *http.Request) {

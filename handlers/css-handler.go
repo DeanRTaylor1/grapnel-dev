@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/DeanRTaylor1/deans-site/config"
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
 
@@ -22,9 +23,9 @@ func ServeCss(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		logger.Error(fmt.Sprintf("Error reading embedded CSS file: %s", err.Error()))
 		return
-	}	
-	
-	cacheDuration := 24 * time.Hour 
+	}
+
+	cacheDuration := 24 * time.Hour
 	SetCacheHeaders(w, ContentTypeCSS, cacheDuration, "output.css")
 
 	w.WriteHeader(http.StatusOK)
@@ -34,7 +35,7 @@ func ServeCss(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 //go:embed templates/fonts/*.otf
 var fontFiles embed.FS
 
-func ServeFonts(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
+func ServeFonts(w http.ResponseWriter, r *http.Request, logger *logger.Logger, config config.EnvConfig) {
 	fontFilename := path.Base(r.URL.Path)
 
 	fontFile, err := fontFiles.ReadFile("templates/fonts/" + fontFilename)
@@ -44,9 +45,10 @@ func ServeFonts(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		return
 	}
 
-	cacheDuration := 24 * time.Hour 
-	SetCacheHeaders(w, ContentTypeFontOpen, cacheDuration, fontFilename)
-
+	if config.IsProduction {
+		cacheDuration := 24 * time.Hour
+		SetCacheHeaders(w, ContentTypeFontOpen, cacheDuration, fontFilename)
+	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(fontFile)

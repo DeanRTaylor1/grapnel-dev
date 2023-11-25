@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"sort"
 	"strconv"
 
 	"github.com/DeanRTaylor1/deans-site/logger"
@@ -37,42 +38,50 @@ var blogs = []Blog{
 		Topic:    "Software",
 		Title:    "Tailored to Thrive: The Advantages of Custom Software Solutions",
 		Intro:    "In today's fast-paced business landscape, staying competitive often means embracing technology to streamline operations, enhance productivity, and deliver exceptional user experiences...",
-		ImageUri: "https://example.com/coding.png",
+		ImageUri: "/images/software.jpg",
 		Date:     "Mar 02 2021",
 		ReadTime: "8 mins read",
 		Href:     "/blogs/2",
 	},
 	{
 		Id:       "3",
-		Topic:    "Web Development",
-		Title:    "Building Web Apps with Go",
-		Intro:    "Create web applications using the Go programming language.",
-		ImageUri: "https://example.com/webapp.png",
-		Date:     "Jan 11 2021",
+		Topic:    "Ecommerce",
+		Title:    "Elevate Your Online Store: The Magic of Ecommerce Integrations",
+		Intro:    "            In the fast-paced world of online retail, staying competitive and delivering exceptional user experiences is crucial...",
+		ImageUri: "/images/ecommerce.jpg",
+		Date:     "Oct 08 2021",
+		ReadTime: "7 mins read",
+		Href:     "/blogs/3",
 	},
 	{
 		Id:       "4",
-		Topic:    "DevOps",
-		Title:    "Container Orchestration with Go",
-		Intro:    "Manage containers efficiently with Go.",
-		ImageUri: "https://example.com/devops.png",
-		Date:     "Jan 11 2021",
+		Topic:    "Business",
+		Title:    " The ROI of Custom Web Development: Why Invest in a Bespoke Website?",
+		Intro:    "Creating a custom website, tailored specifically to a brand's unique needs and identity, can significantly enhance a business's online presence and profitability...",
+		ImageUri: "/images/bespoke.jpg",
+		Date:     "Jan 14 2022",
+		ReadTime: "8 mins read",
+		Href:     "/blogs/4",
 	},
 	{
 		Id:       "5",
-		Topic:    "Data Science",
-		Title:    "Data Analysis in Go",
-		Intro:    "Use Go for data analysis and visualization.",
-		ImageUri: "https://example.com/datascience.png",
-		Date:     "Jan 11 2021",
+		Topic:    "SEO",
+		Title:    " Cracking the Code: How SEO and Custom Web Development Go Hand in hand",
+		Intro:    " In the digital world, the duo of SEO (Search Engine Optimization) and custom web development is like bread and butter...",
+		ImageUri: "/images/seo-image.jpg",
+		Date:     "Feb 17 2022",
+		ReadTime: "6 mins read",
+		Href:     "/blogs/5",
 	},
 	{
 		Id:       "6",
-		Topic:    "Security",
-		Title:    "Go Security Best Practices",
-		Intro:    "Secure your Go applications against threats.",
-		ImageUri: "https://example.com/security.png",
-		Date:     "Jan 11 2021",
+		Topic:    "Case Study",
+		Title:    "Case Study: Elevating Nhimsallyfilm.com with Customized Software and SEO Expertise",
+		Intro:    " In the digital era, tailored software and strategic SEO have become vital for businesses to...",
+		ImageUri: "/images/nhimsallyfilm.jpg",
+		Date:     "Mar 21 2023",
+		ReadTime: "8 mins read",
+		Href:     "/blogs/6",
 	},
 }
 
@@ -85,6 +94,10 @@ func ServeBlog(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		logger.Error(fmt.Sprintf("Error rendering HTML template: %s", err))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
+
+	sort.Slice(blogs, func(i, j int) bool {
+		return blogs[i].Id > blogs[j].Id
+	})
 
 	data := BlogPageData{
 		Title:     "Sys.D Solutions - Blogs",
@@ -149,10 +162,8 @@ func GetBlogByID(w http.ResponseWriter, r *http.Request, logger *logger.Logger, 
 	if err != nil {
 		http.Error(w, "Something went wrong.", http.StatusBadRequest)
 	}
-	data := BlogPageData{
-		Title:     fmt.Sprintf("Sys.D Solutions - %s", blogs[blogIndex].Title),
-		Blogs:     blogs[0:3],
-		BlogCount: len(blogs),
+	data := PageData{
+		Title: fmt.Sprintf("Sys.D Solutions - %s", blogs[blogIndex-1].Title),
 	}
 
 	w.WriteHeader(http.StatusOK)

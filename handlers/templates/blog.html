@@ -25,7 +25,7 @@
                                     <div class="flex flex-col">
                                         <div class="flex flex-col lg:flex-row lg:gap-12">
                                             <p class="text-sm text-[#636262]">${new Date(blog.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
-                                            <p class="text-sm text-[#636262]">6 mins read</p>
+                                            <p class="text-sm text-[#636262]">${blog.ReadTime}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                     <div class="flex flex-col">
                       <div class="flex flex-col lg:flex-row lg:gap-12">
                         <p class="text-sm text-[#636262]">{{ .Date }}</p>
-                        <p class="text-sm text-[#636262]">6 mins read</p>
+                        <p class="text-sm text-[#636262]">{{ .ReadTime }}</p>
                       </div>
                     </div>
                   </div>
