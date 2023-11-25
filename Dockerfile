@@ -8,8 +8,6 @@ RUN go build -o main main.go
 FROM alpine:3.18.4
 WORKDIR /app
 COPY --from=builder /app/main .
-COPY .env.development.local .
-COPY .env.test.local .
 
 EXPOSE 8080
 CMD [ "/app/main" ]
