@@ -34,7 +34,6 @@ type Server struct {
 
 func (s *Server) Start() {
 	s.logStartupMessage()
-	fmt.Println(config.Env.Port)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", config.Env.Port),

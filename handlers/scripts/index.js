@@ -1,10 +1,98 @@
-function showToast(message, duration = 3000) {
+function submitContactForm(event) {
+  event.preventDefault();
+
+  if (!document.getElementById("agreeCheckbox").checked) {
+    showToastError("Please check the box.");
+    return;
+  }
+
+  const firstName = document.getElementById("firstName");
+  const lastName = document.getElementById("lastName");
+  const companyWebsite = document.getElementById("companyWebsite");
+  const email = document.getElementById("email");
+  const message = document.getElementById("message");
+
+  const formData = {
+    first_name: firstName.value,
+    last_name: lastName.value,
+    company_website: companyWebsite.value,
+    email: email.value,
+    message: message.value,
+  };
+
+  fetch("/api/v1/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        showToastSuccess("Success!");
+
+        firstName.value = "";
+        lastName.value = "";
+        companyWebsite.value = "";
+        email.value = "";
+        message.value = "";
+      } else {
+        showToastError("Something went wrong.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      showToastError("Something went wrong.");
+    });
+}
+
+function showToastError(message, duration = 3000) {
   const container = document.getElementById("toast-container");
   const toast = document.createElement("div");
   toast.classList.add(
+    "w-[260px]",
     "bg-gray-800",
     "border-t-4",
     "border-red-400",
+    "text-white",
+    "p-3",
+    "rounded",
+    "shadow",
+    "opacity-0",
+    "transform",
+    "translate-y-8",
+    "transition",
+    "duration-300",
+    "ease-out"
+  );
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove("opacity-0", "translate-y-8");
+    toast.classList.add("opacity-100", "translate-y-0");
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove("opacity-100", "translate-y-0");
+    toast.classList.add("opacity-0", "translate-y-8");
+    toast.addEventListener("transitionend", () => toast.remove());
+  }, duration);
+}
+
+function showToastSuccess(message, duration = 3000) {
+  const container = document.getElementById("toast-container");
+  const toast = document.createElement("div");
+  toast.classList.add(
+    "flex",
+    "text-center",
+    "justify-center",
+    "w-[260px]",
+    "bg-gray-800",
+    "border-t-4",
+    "border-green-400",
     "text-white",
     "p-3",
     "rounded",
@@ -131,6 +219,7 @@ function submitForm(event) {
       if (data.status === "success") {
         setToGreen(submitButton);
         hideInput(emailInput, inputForm);
+        showToastSuccess("Success!");
       } else if (data.message && data.message === "Email already exists") {
         setToRed(submitButton);
         emailInput.keydownHandler = createKeydownHandler(
@@ -138,7 +227,7 @@ function submitForm(event) {
           emailInput
         );
         emailInput.addEventListener("keydown", emailInput.keydownHandler);
-        showToast("This email is already registered.");
+        showToastError("This email is already registered.");
       } else {
         setToRed(submitButton);
         emailInput.keydownHandler = createKeydownHandler(
@@ -146,7 +235,7 @@ function submitForm(event) {
           emailInput
         );
         emailInput.addEventListener("keydown", emailInput.keydownHandler);
-        showToast("Failed to subscribe. Please try again.");
+        showToastError("Failed to subscribe. Please try again.");
       }
     })
     .catch((error) => {
@@ -160,6 +249,20 @@ function submitForm(event) {
     });
 }
 
-addEventListener("load", (event) => {
-  checkRegistration();
+document.addEventListener("DOMContentLoaded", function () {
+  const contactForm = document.getElementById("contactForm");
+  const submitButton = document.getElementById("submitContactForm");
+
+  if (submitButton && contactForm) {
+    submitButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      contactForm.dispatchEvent(new Event("submit")); // Trigger the submit event
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", (event) => submitContactForm(event));
+  } else {
+    checkRegistration();
+  }
 });

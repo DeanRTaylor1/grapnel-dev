@@ -30,3 +30,5 @@ const (
 
 	Separator = " | "
 )
+
+const SuccessResponse = `{"status": "success"}`

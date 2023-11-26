@@ -64,6 +64,10 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 		handlers.GetBlogByID(w, r, s.Logger, blogID)
 	})
 
+	router.Get("/contact", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeContact(w, r, s.Logger)
+	})
+
 	// // Serve static files
 	// staticDir := getStaticDir()
 	// staticFileServer := http.FileServer(http.Dir(staticDir))
