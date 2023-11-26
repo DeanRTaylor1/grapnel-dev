@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"path"
-	"time"
 
+	"github.com/DeanRTaylor1/deans-site/constants"
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
 
@@ -23,8 +23,7 @@ func ServeManifest(w http.ResponseWriter, r *http.Request, logger *logger.Logger
 		return
 	}
 
-	cacheDuration := 24 * time.Hour
-	SetCacheHeaders(w, ContentTypeJSON, cacheDuration, manifestFile)
+	SetCacheHeaders(w, ContentTypeJSON, constants.CacheDuration, manifestFile)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(imageFile)

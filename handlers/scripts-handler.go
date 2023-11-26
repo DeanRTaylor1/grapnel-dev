@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"path"
-	"time"
 
 	"github.com/DeanRTaylor1/deans-site/config"
+	"github.com/DeanRTaylor1/deans-site/constants"
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
 
@@ -24,12 +24,7 @@ func ServeScripts(w http.ResponseWriter, r *http.Request, logger *logger.Logger,
 		return
 	}
 
-	if config.IsProduction {
-		cacheDuration := 24 * time.Hour
-		SetCacheHeaders(w, ContentTypeJavaScript, cacheDuration, scriptName)
-	}
+	SetCacheHeaders(w, ContentTypeJavaScript, constants.CacheDuration, scriptName)
 
-	w.Header().Set("Content/Type", ContentTypeJavaScript)
-	w.WriteHeader(http.StatusOK)
 	w.Write(scriptFile)
 }

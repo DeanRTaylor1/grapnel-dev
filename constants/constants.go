@@ -1,5 +1,7 @@
 package constants
 
+import "time"
+
 const (
 	Reset = "\x1b[0m"
 
@@ -32,3 +34,5 @@ const (
 )
 
 const SuccessResponse = `{"status": "success"}`
+
+const CacheDuration = 24 * time.Hour

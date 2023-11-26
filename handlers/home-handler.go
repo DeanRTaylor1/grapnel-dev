@@ -24,8 +24,7 @@ func ServeHome(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		Title: "Sys.D Solutions - Home",
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", ContentTypeHTML)
 
 	err = tmpl.ExecuteTemplate(w, "index.html", data)
 	if err != nil {
