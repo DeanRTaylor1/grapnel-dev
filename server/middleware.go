@@ -1,12 +1,17 @@
 package server
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/DeanRTaylor1/deans-site/constants"
+	"golang.org/x/time/rate"
 )
 
 type statusResponseWriter struct {
@@ -51,4 +56,73 @@ func ColorLoggingMiddleware(next http.Handler) http.Handler {
 
 		log.Println(colorLog("Chi", method, path, statusCode, duration))
 	})
+}
+
+var (
+	ipLimiterMap   = make(map[string]*rate.Limiter)
+	ipLimiterMutex = &sync.Mutex{}
+)
+
+func NewIPRateLimiter(ip string) *rate.Limiter {
+	limiter := rate.NewLimiter(rate.Limit(25), 15)
+	return limiter
+}
+
+func getClientIP(r *http.Request) string {
+	xForwardedFor := r.Header.Get("X-Forwarded-For")
+	if xForwardedFor != "" {
+		return strings.Split(xForwardedFor, ",")[0]
+	}
+	xRealIP := r.Header.Get("X-Real-IP")
+	if xRealIP != "" {
+		return xRealIP
+	}
+	return strings.Split(r.RemoteAddr, ":")[0]
+}
+
+func limitMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		clientIP := getClientIP(r)
+
+		fmt.Println(clientIP)
+		ipLimiterMutex.Lock()
+		limiter, exists := ipLimiterMap[clientIP]
+		if !exists {
+			limiter = NewIPRateLimiter(clientIP)
+			ipLimiterMap[clientIP] = limiter
+		}
+		ipLimiterMutex.Unlock()
+
+		if !limiter.Allow() {
+			// Return a 429 Too Many Requests response if the limit is exceeded.
+			http.Error(w, "429 Too Many Requests", http.StatusTooManyRequests)
+			return
+		}
+		fmt.Println("checking")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func GzipMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+			gw := gzip.NewWriter(w)
+			defer gw.Close()
+			w.Header().Set("Content-Encoding", "gzip")
+			gzippedResponseWriter := gzipResponseWriter{Writer: gw, ResponseWriter: w}
+			next.ServeHTTP(gzippedResponseWriter, r)
+		} else {
+			next.ServeHTTP(w, r)
+		}
+	})
+}
+
+type gzipResponseWriter struct {
+	io.Writer
+	http.ResponseWriter
+}
+
+func (g gzipResponseWriter) Write(b []byte) (int, error) {
+	return g.Writer.Write(b)
 }

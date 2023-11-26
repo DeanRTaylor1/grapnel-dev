@@ -9,14 +9,16 @@ import (
 )
 
 type EnvConfig struct {
-	ENV           string
-	IsProduction  bool
-	IsTest        bool
-	IsDevelopment bool
-	BaseUrl       string
-	Port          string
-	Api_Version   string
-	Mongo_Uri     string
+	ENV             string
+	IsProduction    bool
+	IsTest          bool
+	IsDevelopment   bool
+	BaseUrl         string
+	Port            string
+	Api_Version     string
+	Mongo_Uri       string
+	Db_Name         string
+	Collection_Name string
 }
 
 var Env EnvConfig
@@ -43,14 +45,16 @@ func LoadEnv() {
 	}
 
 	Env = EnvConfig{
-		ENV:           getEnv("GO_ENV", "development"),
-		IsProduction:  getEnv("GO_ENV", "production") == "production",
-		IsTest:        getEnv("GO_ENV", "test") == "test",
-		IsDevelopment: getEnv("GO_ENV", "development") == "development",
-		BaseUrl:       getEnv("BASE_URL", "http://localhost"),
-		Port:          getEnv("PORT", "8080"),
-		Mongo_Uri:     getEnv("MONGO_URI", ""),
-		Api_Version:   getEnv("API_VERSION", "v1"),
+		ENV:             getEnv("GO_ENV", "development"),
+		IsProduction:    getEnv("GO_ENV", "production") == "production",
+		IsTest:          getEnv("GO_ENV", "test") == "test",
+		IsDevelopment:   getEnv("GO_ENV", "development") == "development",
+		BaseUrl:         getEnv("BASE_URL", "http://localhost"),
+		Port:            getEnv("PORT", "8080"),
+		Mongo_Uri:       getEnv("MONGO_URI", ""),
+		Api_Version:     getEnv("API_VERSION", "v1"),
+		Db_Name:         getEnv("DB_NAME", ""),
+		Collection_Name: getEnv("COLLECTION_EMAIL", ""),
 	}
 }
 

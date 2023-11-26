@@ -1,46 +1,86 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/DeanRTaylor1/deans-site/logger"
+	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type SubscribeRequest struct {
-	Email string `json:"email"`
+	Email string `json:"email" validate:"required,email"`
 }
 
-func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger) {
-
+func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *mongo.Client, v *validator.Validate) {
 	var subscribeRequest SubscribeRequest
 	err := json.NewDecoder(r.Body).Decode(&subscribeRequest)
 	if err != nil {
-		ErrorHandler(w, err, http.StatusBadRequest, "Email already exists.")
+		ErrorHandler(w, err, http.StatusBadRequest, "Invalid request format.")
 		return
 	}
 
-	email := subscribeRequest.Email
+	if err := v.Struct(subscribeRequest); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	fmt.Println(subscribeRequest.Email)
 
-	l.Info(fmt.Sprintf("Email: %s", email))
+	collection := client.Database("sysd").Collection("mailing_list")
+
+	var existingEntry SubscribeRequest
+
+	err = collection.FindOne(context.Background(), bson.D{{Key: "email", Value: subscribeRequest.Email}}).Decode(&existingEntry)
+
+	if err == nil {
+		ErrorHandler(w, nil, http.StatusConflict, "Email already exists")
+		return
+	} else if err != mongo.ErrNoDocuments {
+		ErrorHandler(w, err, http.StatusInternalServerError, "Error checking existing email.")
+		return
+	}
+
+	_, err = collection.InsertOne(context.Background(), subscribeRequest)
+	if err != nil {
+		ErrorHandler(w, err, http.StatusInternalServerError, "Error inserting new email.")
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(`{"status": "success"}`))
 }
 
-func ErrorHandler(w http.ResponseWriter, err error, statusCode int, message string) {
-	if err != nil {
-		errorMessage := map[string]string{"error": err.Error(), "message": message}
-		jsonResponse, marshalErr := json.Marshal(errorMessage)
-		if marshalErr != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(statusCode)
-		w.Write(jsonResponse)
+func Unsubscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *mongo.Client, v *validator.Validate, email string) {
+	if email == "" {
+		ErrorHandler(w, errors.New("missing email parameter"), http.StatusBadRequest, "Email parameter is required.")
+		return
 	}
+
+	if err := v.Var(email, "required,email"); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	collection := client.Database("sysd").Collection("mailing_list")
+
+	result, err := collection.DeleteOne(context.Background(), bson.M{"email": email})
+	if err != nil {
+		ErrorHandler(w, err, http.StatusInternalServerError, "Error deleting email.")
+		return
+	}
+
+	if result.DeletedCount == 0 {
+		ErrorHandler(w, nil, http.StatusNotFound, "Email not found.")
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status": "success"}`))
 }

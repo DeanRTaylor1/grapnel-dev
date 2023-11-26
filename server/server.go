@@ -11,6 +11,7 @@ import (
 	"github.com/DeanRTaylor1/deans-site/config"
 	"github.com/DeanRTaylor1/deans-site/logger"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -28,18 +29,18 @@ type Server struct {
 	Logger      *logger.Logger
 	Config      config.EnvConfig
 	MongoClient *mongo.Client
+	Validator   validator.Validate
 }
 
 func (s *Server) Start() {
 	s.logStartupMessage()
+	fmt.Println(config.Env.Port)
 
-	// Set up the HTTP server
 	srv := &http.Server{
-		Addr:    ":8080", // Replace with your server's address and port
+		Addr:    fmt.Sprintf(":%s", config.Env.Port),
 		Handler: s.Router,
 	}
 
-	// Start the server in a goroutine
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			s.Logger.Error(fmt.Sprintf("Failed to start server: %v", err))
@@ -80,11 +81,12 @@ func NewServer(router *chi.Mux, logger *logger.Logger, config config.EnvConfig) 
 		Logger:      logger,
 		Config:      config,
 		MongoClient: mongoClient,
+		Validator:   *validator.New(),
 	}
 }
 
 func connectMongoDB() (*mongo.Client, error) {
-	uri := config.Env.Mongo_Uri // Replace with your MongoDB URI
+	uri := config.Env.Mongo_Uri
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
 		return nil, err
@@ -98,9 +100,12 @@ func connectMongoDB() (*mongo.Client, error) {
 }
 
 func (s *Server) RegisterMiddlewares() {
+	s.Router.Use(GzipMiddleware)
+	s.Router.Use(limitMiddleware)
 	if s.Config.IsDevelopment {
 		s.Router.Use(ColorLoggingMiddleware)
 	}
+
 }
 
 func (s *Server) logStartupMessage() {
