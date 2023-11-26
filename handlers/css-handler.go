@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/DeanRTaylor1/deans-site/config"
+	"github.com/DeanRTaylor1/deans-site/constants"
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
 
@@ -25,8 +26,7 @@ func ServeCss(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		return
 	}
 
-	cacheDuration := 24 * time.Hour
-	SetCacheHeaders(w, ContentTypeCSS, cacheDuration, "output.css")
+	SetCacheHeaders(w, ContentTypeCSS, constants.CacheDuration, "output.css")
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(styles)

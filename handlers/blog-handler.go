@@ -105,7 +105,7 @@ func ServeBlog(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		BlogCount: len(blogs),
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", ContentTypeHTML)
 
 	err = tmpl.ExecuteTemplate(w, "blog.html", data)
 	if err != nil {

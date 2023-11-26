@@ -24,7 +24,7 @@ func ErrorHandler(w http.ResponseWriter, err error, statusCode int, message stri
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", ContentTypeJSON)
 	w.WriteHeader(statusCode)
 	w.Write(jsonResponse)
 }

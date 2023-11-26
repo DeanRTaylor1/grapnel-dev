@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"path"
-	"time"
 
+	"github.com/DeanRTaylor1/deans-site/constants"
 	"github.com/DeanRTaylor1/deans-site/logger"
 )
 
@@ -23,8 +23,7 @@ func ServeImages(w http.ResponseWriter, r *http.Request, logger *logger.Logger) 
 		return
 	}
 
-	cacheDuration := 24 * time.Hour
-	SetCacheHeaders(w, ContentTypeJPG, cacheDuration, imageFilename)
+	SetCacheHeaders(w, ContentTypeJPG, constants.CacheDuration, imageFilename)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(imageFile)
@@ -43,8 +42,7 @@ func ServeIcons(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		return
 	}
 
-	cacheDuration := 24 * time.Hour
-	SetCacheHeaders(w, "image/png", cacheDuration, iconFilename)
+	SetCacheHeaders(w, "image/png", constants.CacheDuration, iconFilename)
 
 	w.Header().Set("Content-Type", ContentTypePNG)
 	w.WriteHeader(http.StatusOK)
@@ -61,10 +59,8 @@ func ServeFavicon(w http.ResponseWriter, r *http.Request, logger *logger.Logger)
 		return
 	}
 
-	cacheDuration := 24 * time.Hour
-	SetCacheHeaders(w, "image/png", cacheDuration, iconFilename)
+	SetCacheHeaders(w, ContentTypeICO, constants.CacheDuration, iconFilename)
 
-	w.Header().Set("Content-Type", ContentTypeICO)
 	w.WriteHeader(http.StatusOK)
 	w.Write(iconFile)
 }

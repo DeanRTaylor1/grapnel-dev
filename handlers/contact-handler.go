@@ -27,7 +27,7 @@ func ServeContact(w http.ResponseWriter, r *http.Request, logger *logger.Logger)
 		Title: "Sys.D Solutions - Contact Us",
 	}
 
-	w.WriteHeader(http.StatusOK)
+	SetCacheHeaders(w, ContentTypeHTML, constants.CacheDuration, "contact-html")
 
 	err = tmpl.ExecuteTemplate(w, "contact.html", data)
 	if err != nil {
