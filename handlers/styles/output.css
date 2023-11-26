@@ -743,6 +743,10 @@ video {
   width: 16rem;
 }
 
+.w-\[260px\] {
+  width: 260px;
+}
+
 .w-full {
   width: 100%;
 }
@@ -999,6 +1003,11 @@ video {
 .border-black {
   --tw-border-opacity: 1;
   border-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
+.border-green-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(74 222 128 / var(--tw-border-opacity));
 }
 
 .border-red-400 {
