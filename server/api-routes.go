@@ -15,12 +15,16 @@ func (s *Server) RegisterApiRoutes() {
 		})
 
 		r.Post("/subscribe", func(w http.ResponseWriter, r *http.Request) {
-			handlers.Subscribe(w, r, *s.Logger, s.MongoClient, &s.Validator)
+			handlers.Subscribe(w, r, *s.Logger, s.MongoClient, &s.Validator, s.Config)
 		})
 
-		r.Post("/unsubscribe", func(w http.ResponseWriter, r *http.Request) {
+		r.Get("/unsubscribe", func(w http.ResponseWriter, r *http.Request) {
 			email := r.URL.Query().Get("email")
 			handlers.Unsubscribe(w, r, *s.Logger, s.MongoClient, &s.Validator, email)
+		})
+
+		r.Post("/contact", func(w http.ResponseWriter, r *http.Request) {
+			handlers.PostContact(w, r, *s.Logger, s.MongoClient, &s.Validator, s.Config)
 		})
 	})
 

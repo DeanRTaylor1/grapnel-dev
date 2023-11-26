@@ -6,6 +6,8 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/DeanRTaylor1/deans-site/config"
+	"github.com/DeanRTaylor1/deans-site/constants"
 	"github.com/DeanRTaylor1/deans-site/logger"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,7 +18,7 @@ type SubscribeRequest struct {
 	Email string `json:"email" validate:"required,email"`
 }
 
-func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *mongo.Client, v *validator.Validate) {
+func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *mongo.Client, v *validator.Validate, c config.EnvConfig) {
 	var subscribeRequest SubscribeRequest
 	err := json.NewDecoder(r.Body).Decode(&subscribeRequest)
 	if err != nil {
@@ -29,7 +31,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *
 		return
 	}
 
-	collection := client.Database("sysd").Collection("mailing_list")
+	collection := client.Database(c.Db_Name).Collection(c.Collection_Email)
 
 	var existingEntry SubscribeRequest
 
@@ -51,7 +53,7 @@ func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "success"}`))
+	w.Write([]byte(constants.SuccessResponse))
 }
 
 func Unsubscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *mongo.Client, v *validator.Validate, email string) {
@@ -80,5 +82,5 @@ func Unsubscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"status": "success"}`))
+	w.Write([]byte(constants.SuccessResponse))
 }
