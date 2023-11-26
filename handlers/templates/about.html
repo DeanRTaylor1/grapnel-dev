@@ -5,46 +5,6 @@
       {{template "head.html" .}}
     </head>
   </head>
-  <script>
-    function submitForm(event) {
-      event.preventDefault();
-
-      const emailInput = document.getElementById("email-input");
-      const email = emailInput.value;
-
-      const jsonData = JSON.stringify({ email });
-
-      const submitButton = document.getElementById("submit-button");
-
-      fetch("/api/v1/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle the response
-          console.log(data);
-
-          // Check the status in the response
-          if (data.status === "success") {
-            // Update the button to a green tick
-            submitButton.classList.remove("bg-[#276ef1]");
-            submitButton.classList.add("bg-green-500");
-            submitButton.value = "✅ Subscribed";
-          } else {
-            submitButton.classList.remove("bg-[#276ef1]");
-            submitButton.classList.add("bg-[#f1aa27]");
-            submitButton.value = "❌ Failed";
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
-  </script>
 
   <body>
     <!-- Navbar Dropdown 1 row -->

@@ -1,109 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  {{template "head.html" .}}
+    {{template "head.html" .}}
+    <script src="/scripts/index.js"></script>
   </head>
-  <script>
-    function getLoadingSpinner() {
-      return document.getElementById("loading-spinner");
-    }
-
-    function hideLoadingSpinner(spinner) {
-      spinner.classList.add("hidden");
-    }
-
-    function setToGreen(submitButton) {
-      localStorage.setItem("subscriptionStatus", true);
-      submitButton.classList.remove("bg-[#276ef1]");
-      submitButton.classList.remove("hidden");
-      submitButton.classList.add("bg-green-500");
-      submitButton.value = "✅ Subscribed";
-    }
-
-    function showInput(inputButton, emailInput) {
-      inputButton.classList.remove("hidden");
-      emailInput.classList.remove("hidden");
-    }
-
-    function hideInput(inputButton, emailForm) {
-      inputButton.classList.add("hidden");
-      emailForm.classList.remove("space-x-4");
-    }
-
-    function setToRed(submitButton) {
-      submitButton.classList.remove("bg-[#276ef1]");
-      submitButton.classList.add("bg-[#f1aa27]");
-      submitButton.value = "❌ Failed";
-    }
-
-    function getEmailForm() {
-      return document.getElementById("email-form");
-    }
-
-    function getEmailInput() {
-      return document.getElementById("email-input");
-    }
-
-    function getSubmitButton() {
-      return document.getElementById("submit-button");
-    }
-
-    function checkRegistration() {
-      const subscriptionStatus = localStorage.getItem("subscriptionStatus");
-      const emailInput = getEmailInput();
-      const loadingSpinner = getLoadingSpinner();
-      const submitButton = getSubmitButton();
-
-      if (subscriptionStatus) {
-        const inputForm = getEmailForm();
-
-        setToGreen(submitButton);
-        hideLoadingSpinner(loadingSpinner);
-        hideInput(emailInput, inputForm);
-        return;
-      }
-      showInput(emailInput, submitButton);
-      hideLoadingSpinner(loadingSpinner);
-    }
-
-    function submitForm(event) {
-      event.preventDefault();
-
-      const emailInput = getEmailInput();
-      const email = emailInput.value;
-      const inputForm = getEmailForm();
-
-      const jsonData = JSON.stringify({ email });
-
-      // Reference the button element
-      const submitButton = getSubmitButton();
-
-      // Send the POST request using fetch
-      fetch("/api/v1/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setToGreen(submitButton);
-            hideInput(emailInput, inputForm);
-          } else {
-            setToRed(submitButton);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
-
-    addEventListener("load", (event) => {
-      checkRegistration();
-    });
-  </script>
 
   <body>
     <!-- Navbar Dropdown 1 row -->
@@ -169,6 +69,7 @@
                   name="email"
                   placeholder="Enter your email"
                   required=""
+                  autocomplete="email"
                 />
 
                 <input
@@ -285,93 +186,87 @@
         </div>
       </section>
 
-      <main>
-        <!-- Tools Section -->
-        <section id="tools">
-          <!-- Container -->
-          <div class="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-24 lg:py-32">
-            <!-- Title -->
-            <div class="mx-auto text-center">
-              <h2 class="text-3xl font-bold md:text-5xl">
-                Unleash Your Vision: Create, Customize, Enhance.
-              </h2>
-              <p
-                class="mx-auto mb-8 mt-4 max-w-lg text-[#647084] md:mb-12 lg:mb-16"
-              >
-                Explore some of the tools and technologies we leverage to bring
-                your ideas to life.
+      <!-- Tools Section -->
+      <section id="tools">
+        <!-- Container -->
+        <div class="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-24 lg:py-32">
+          <!-- Title -->
+          <div class="mx-auto text-center">
+            <h2 class="text-3xl font-bold md:text-5xl">
+              Unleash Your Vision: Create, Customize, Enhance.
+            </h2>
+            <p
+              class="mx-auto mb-8 mt-4 max-w-lg text-[#647084] md:mb-12 lg:mb-16"
+            >
+              Explore some of the tools and technologies we leverage to bring
+              your ideas to life.
+            </p>
+          </div>
+          <!-- Content -->
+          <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
+            <!-- React -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i class="fa-brands fa-react fa-2xl" style="color: #5a96f5"></i>
+              <p class="text-xl font-semibold">React</p>
+              <p class="text-sm text-[#636262]">
+                Harness the power of React for dynamic and interactive user
+                interfaces.
               </p>
             </div>
-            <!-- Content -->
-            <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3">
-              <!-- React -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i class="fa-brands fa-react fa-2xl" style="color: #5a96f5"></i>
-                <p class="text-xl font-semibold">React</p>
-                <p class="text-sm text-[#636262]">
-                  Harness the power of React for dynamic and interactive user
-                  interfaces.
-                </p>
-              </div>
-              <!-- WordPress -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i
-                  class="fa-brands fa-wordpress fa-2xl"
-                  style="color: #6296f5"
-                ></i>
-                <p class="text-xl font-semibold">WordPress</p>
-                <p class="text-sm text-[#636262]">
-                  Create and customise scalable websites with the flexibility of
-                  WordPress.
-                </p>
-              </div>
-              <!-- Shopify -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i
-                  class="fa-brands fa-shopify fa-2xl"
-                  style="color: #6296f5"
-                ></i>
-                <p class="text-xl font-semibold">Shopify</p>
-                <p class="text-sm text-[#636262]">
-                  Build your online store or develop a custom integration with
-                  ease using the powerful features of Shopify.
-                </p>
-              </div>
-              <!-- Node.js -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i class="fa-brands fa-node fa-2xl" style="color: #6296f5"></i>
-                <p class="text-xl font-semibold">Node.js</p>
-                <p class="text-sm text-[#636262]">
-                  Harness the speed and efficiency of Node.js for building
-                  scalable and real-time applications, perfect for data
-                  processing and streaming.
-                </p>
-              </div>
-              <!-- PHP -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i class="fa-brands fa-php fa-2xl" style="color: #6296f5"></i>
-                <p class="text-xl font-semibold">PHP</p>
-                <p class="text-sm text-[#636262]">
-                  Utilize PHP for server-side scripting and building dynamic web
-                  pages.
-                </p>
-              </div>
-              <!-- Go -->
-              <div class="grid gap-4 rounded-md p-8 md:p-10">
-                <i
-                  class="fa-brands fa-golang fa-2xl"
-                  style="color: #6296f5"
-                ></i>
-                <p class="text-xl font-semibold">Go</p>
-                <p class="text-sm text-[#636262]">
-                  Embrace the power and efficiency of Go for building robust,
-                  concurrent, and high-performance applications.
-                </p>
-              </div>
+            <!-- WordPress -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i
+                class="fa-brands fa-wordpress fa-2xl"
+                style="color: #6296f5"
+              ></i>
+              <p class="text-xl font-semibold">WordPress</p>
+              <p class="text-sm text-[#636262]">
+                Create and customise scalable websites with the flexibility of
+                WordPress.
+              </p>
+            </div>
+            <!-- Shopify -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i class="fa-brands fa-shopify fa-2xl" style="color: #6296f5"></i>
+              <p class="text-xl font-semibold">Shopify</p>
+              <p class="text-sm text-[#636262]">
+                Build your online store or develop a custom integration with
+                ease using the powerful features of Shopify.
+              </p>
+            </div>
+            <!-- Node.js -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i class="fa-brands fa-node fa-2xl" style="color: #6296f5"></i>
+              <p class="text-xl font-semibold">Node.js</p>
+              <p class="text-sm text-[#636262]">
+                Harness the speed and efficiency of Node.js for building
+                scalable and real-time applications, perfect for data processing
+                and streaming.
+              </p>
+            </div>
+            <!-- PHP -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i class="fa-brands fa-php fa-2xl" style="color: #6296f5"></i>
+              <p class="text-xl font-semibold">PHP</p>
+              <p class="text-sm text-[#636262]">
+                Utilize PHP for server-side scripting and building dynamic web
+                pages.
+              </p>
+            </div>
+            <!-- Go -->
+            <div class="grid gap-4 rounded-md p-8 md:p-10">
+              <i class="fa-brands fa-golang fa-2xl" style="color: #6296f5"></i>
+              <p class="text-xl font-semibold">Go</p>
+              <p class="text-sm text-[#636262]">
+                Embrace the power and efficiency of Go for building robust,
+                concurrent, and high-performance applications.
+              </p>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+    </main>
     <footer class="block">{{template "footer.html"}}</footer>
+    {{ template "toast.html" }}
   </body>
 </html>

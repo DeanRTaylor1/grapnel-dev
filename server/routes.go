@@ -2,8 +2,8 @@ package server
 
 import (
 	"net/http"
-	"path/filepath"
 
+	"github.com/DeanRTaylor1/deans-site/config"
 	"github.com/DeanRTaylor1/deans-site/handlers"
 	"github.com/go-chi/chi/v5"
 )
@@ -34,6 +34,14 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 		handlers.ServeImages(w, r, s.Logger)
 	})
 
+	router.Get("/manifest/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeManifest(w, r, s.Logger)
+	})
+
+	router.Get("/scripts/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeScripts(w, r, s.Logger, config.Env)
+	})
+
 	router.Get("/blogs", func(w http.ResponseWriter, r *http.Request) {
 		handlers.ServeBlog(w, r, s.Logger)
 	})
@@ -43,26 +51,24 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 	})
 
 	router.Get("/blogs/{id}", func(w http.ResponseWriter, r *http.Request) {
-		// Retrieve the captured blog post ID from the URL
 		blogID := chi.URLParam(r, "id")
 
-		// Call a handler function to handle the request with the blogID
 		handlers.GetBlogByID(w, r, s.Logger, blogID)
 	})
 
-	// Serve static files
-	staticDir := getStaticDir()
-	staticFileServer := http.FileServer(http.Dir(staticDir))
-	staticRoute := "/static/"
+	// // Serve static files
+	// staticDir := getStaticDir()
+	// staticFileServer := http.FileServer(http.Dir(staticDir))
+	// staticRoute := "/static/"
 
-	router.Handle(staticRoute+"*", http.StripPrefix(staticRoute, staticFileServer))
+	// router.Handle(staticRoute+"*", http.StripPrefix(staticRoute, staticFileServer))
 }
 
-func getStaticDir() string {
-	dir, err := filepath.Abs(filepath.Join(filepath.Dir("."), "static"))
-	if err != nil {
-		// Handle error
-		panic(err)
-	}
-	return dir
-}
+// func getStaticDir() string {
+// 	dir, err := filepath.Abs(filepath.Join(filepath.Dir("."), "static"))
+// 	if err != nil {
+// 		// Handle error
+// 		panic(err)
+// 	}
+// 	return dir
+// }
