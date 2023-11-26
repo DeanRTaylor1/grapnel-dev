@@ -27,7 +27,6 @@ func main() {
 		log.Fatalf("Error initialising logger. Error: %s", err.Error())
 	}
 
-	fmt.Println("Starting")
 	s := server.NewServer(r, l, config)
 	s.RegisterMiddlewares()
 	s.RegisterApiRoutes()

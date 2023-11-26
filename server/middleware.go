@@ -84,7 +84,6 @@ func limitMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		clientIP := getClientIP(r)
 
-		fmt.Println(clientIP)
 		ipLimiterMutex.Lock()
 		limiter, exists := ipLimiterMap[clientIP]
 		if !exists {
@@ -98,7 +97,6 @@ func limitMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "429 Too Many Requests", http.StatusTooManyRequests)
 			return
 		}
-		fmt.Println("checking")
 
 		next.ServeHTTP(w, r)
 	})

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/DeanRTaylor1/deans-site/logger"
@@ -29,7 +28,6 @@ func Subscribe(w http.ResponseWriter, r *http.Request, l logger.Logger, client *
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println(subscribeRequest.Email)
 
 	collection := client.Database("sysd").Collection("mailing_list")
 

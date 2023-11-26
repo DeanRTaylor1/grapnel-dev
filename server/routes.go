@@ -30,8 +30,16 @@ func (s *Server) RegisterRoutes(router *chi.Mux) {
 		handlers.ServeFonts(w, r, s.Logger, s.Config)
 	})
 
+	router.Get("/images/icons/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeFavicon(w, r, s.Logger)
+	})
+
 	router.Get("/images/*", func(w http.ResponseWriter, r *http.Request) {
 		handlers.ServeImages(w, r, s.Logger)
+	})
+
+	router.Get("/manifest/images/icons/*", func(w http.ResponseWriter, r *http.Request) {
+		handlers.ServeIcons(w, r, s.Logger)
 	})
 
 	router.Get("/manifest/*", func(w http.ResponseWriter, r *http.Request) {

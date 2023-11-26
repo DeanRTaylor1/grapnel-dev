@@ -119,16 +119,3 @@ func (l *Logger) Close() {
 		l.errorHandler.Close()
 	}
 }
-
-func main() {
-	logger, err := NewLogger("/path/to/logs")
-	if err != nil {
-		fmt.Println("Error creating logger:", err)
-		return
-	}
-	defer logger.Close()
-
-	// Log messages using the logger like this
-	// logger.Debug("This is a debug message.")
-	// logger.Error("This is an error message.")
-}
