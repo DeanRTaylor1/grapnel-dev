@@ -18,38 +18,36 @@
 
       <!-- MENU CONTENT 1 -->
       <div
-        class="mt-14 flex flex-col gap-8 lg:mt-0 lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 justify-center items-center"
-        x-bind:class="isOpen ? 'show' : 'hidden'"
+        x-bind:class="{ 'hidden': !isOpen, 'flex flex-col gap-8 mt-14 lg:mt-0 lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 justify-center items-center transition-all ease-in-out': isOpen }"
       >
         <a
           href="/"
-          class="rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
           >Home</a
         >
         <a
           href="/about"
-          class="font-Gilroy rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 transition lg:hover:text-[#d6a701]"
+          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
           >About</a
         >
         <a
           href="/faq"
-          class="rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
           >FAQs</a
         >
         <a
           href="/blogs"
-          class="mb-6 font-inter rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
+          x-bind:class="{ 'hidden': !isOpen, 'mb-6 rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
           >Blog</a
         >
       </div>
       <!-- MENU CONTENT 2 -->
       <div
-        class="pl-4 flex flex-col space-y-8 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 justify-between"
-        x-bind:class="isOpen ? 'show' : 'hidden'"
+        x-bind:class="{ 'hidden': !isOpen, 'flex flex-col space-y-8 pl-4 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 justify-between': isOpen }"
       >
         <a
-          href="#"
-          class="relative mr-5 inline-block rounded-xl border border-[#1353FE] bg-white px-8 py-4 text-center font-semibold text-[#1353FE] [box-shadow:rgb(0,0,0)_6px_6px] hover:border-black md:mr-6"
+          href="/contact"
+          x-bind:class="{ 'hidden': !isOpen, 'relative mr-5 inline-block rounded-xl border border-[#1353FE] bg-white px-8 py-4 text-center font-semibold text-[#1353FE] [box-shadow:rgb(0,0,0)_6px_6px] hover:border-black md:mr-6': isOpen }"
           >Get In Touch</a
         >
       </div>
