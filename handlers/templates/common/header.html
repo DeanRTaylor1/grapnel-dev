@@ -18,36 +18,37 @@
 
       <!-- MENU CONTENT 1 -->
       <div
-        x-bind:class="{ 'hidden': !isOpen, 'flex flex-col gap-8 mt-14 lg:mt-0 lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 justify-center items-center transition-all ease-in-out': isOpen }"
+        x-bind:class="{ 'hidden lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 lg:justify-center lg:items-center': !isOpen, 'flex flex-col justify-items gap-8 mt-14 lg:mt-0 transition-all ease-in-out lg:flex lg:flex-row lg:space-x-1 lg:space-y-0 lg:justify-center lg:items-center': isOpen }"
       >
         <a
           href="/"
-          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
+          class="flex justify-center rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
           >Home</a
         >
         <a
           href="/about"
-          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
+          class="flex justify-center rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
           >About</a
         >
         <a
           href="/faq"
-          x-bind:class="{ 'hidden': !isOpen, 'rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
+          class="flex justify-center rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
           >FAQs</a
         >
         <a
           href="/blogs"
-          x-bind:class="{ 'hidden': !isOpen, 'mb-6 rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]': isOpen }"
+          class="mb-6 flex justify-center rounded-lg lg:px-6 lg:py-4 lg:hover:bg-gray-50 lg:hover:text-[#d6a701]"
           >Blog</a
         >
       </div>
+
       <!-- MENU CONTENT 2 -->
       <div
-        x-bind:class="{ 'hidden': !isOpen, 'flex flex-col space-y-8 pl-4 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 justify-between': isOpen }"
+        x-bind:class="{ 'hidden lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 lg:justify-between': !isOpen, 'flex flex-col justify-items space-y-8 pl-4 lg:flex lg:flex-row lg:space-x-3 lg:space-y-0 lg:justify-between': isOpen }"
       >
         <a
           href="/contact"
-          x-bind:class="{ 'hidden': !isOpen, 'relative mr-5 inline-block rounded-xl border border-[#1353FE] bg-white px-8 py-4 text-center font-semibold text-[#1353FE] [box-shadow:rgb(0,0,0)_6px_6px] hover:border-black md:mr-6': isOpen }"
+          class="relative mr-5 inline-block rounded-xl border border-[#1353FE] bg-white px-8 py-4 text-center font-semibold text-[#1353FE] hover:border-black md:mr-6"
           >Get In Touch</a
         >
       </div>
