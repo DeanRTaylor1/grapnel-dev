@@ -166,7 +166,7 @@ func GetBlogByID(w http.ResponseWriter, r *http.Request, logger *logger.Logger, 
 		Title: fmt.Sprintf("Grapnel - %s", blogs[blogIndex-1].Title),
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", ContentTypeHTML)
 
 	err = tmpl.ExecuteTemplate(w, fmt.Sprintf("blog-%s.html", blogID), data)
 	if err != nil {
