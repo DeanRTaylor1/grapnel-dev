@@ -100,7 +100,7 @@ func ServeBlog(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 	})
 
 	data := BlogPageData{
-		Title:     "Sys.D Solutions - Blogs",
+		Title:     "Grapnel - Blogs",
 		Blogs:     blogs[0:3],
 		BlogCount: len(blogs),
 	}
@@ -163,7 +163,7 @@ func GetBlogByID(w http.ResponseWriter, r *http.Request, logger *logger.Logger, 
 		http.Error(w, "Something went wrong.", http.StatusBadRequest)
 	}
 	data := PageData{
-		Title: fmt.Sprintf("Sys.D Solutions - %s", blogs[blogIndex-1].Title),
+		Title: fmt.Sprintf("Grapnel - %s", blogs[blogIndex-1].Title),
 	}
 
 	w.WriteHeader(http.StatusOK)

@@ -29,5 +29,5 @@ func SetCacheHeaders(w http.ResponseWriter, contentType string, cacheDuration ti
 	w.Header().Set("Content-Type", contentType)
 	w.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", int(cacheDuration.Seconds())))
 	w.Header().Set("Expires", time.Now().Add(cacheDuration).Format(http.TimeFormat))
-	w.Header().Set("ETag", fmt.Sprintf("sysd-cache-%s", key))
+	w.Header().Set("ETag", fmt.Sprintf("grapnel-cache-%s", key))
 }

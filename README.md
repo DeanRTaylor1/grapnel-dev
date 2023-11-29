@@ -1,8 +1,8 @@
-# Sys.D Solutions
+# Grapnel Solutions
 
 ## Overview
 
-Sys.D Solutions is a streamlined web application focused on efficiency and portability. The entire application is embedded within a binary, ensuring a lightweight and robust deployment.
+Grapnel Solutions is a streamlined web application focused on efficiency and portability. The entire application is embedded within a binary, ensuring a lightweight and robust deployment.
 
 ## Key Features
 
@@ -12,6 +12,6 @@ Sys.D Solutions is a streamlined web application focused on efficiency and porta
 ## Installation
 
 ```bash
-docker build -t sys-d-solutions .
-docker run -p 8080:8080 sys-d-solutions
+docker build -t grapnel .
+docker run -p 8080:8080 grapnel
 ```
