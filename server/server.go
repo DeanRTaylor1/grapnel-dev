@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type ServerInterface interface {
@@ -68,37 +70,37 @@ func (s *Server) Start() {
 }
 
 func NewServer(router *chi.Mux, logger *logger.Logger, config config.EnvConfig) ServerInterface {
-	// mongoClient, err := connectMongoDB()
-	// if err != nil {
-	// 	logger.Error(fmt.Sprintf("Failed to connect to MongoDB: %v", err))
-	// 	os.Exit(1)
-	// }
+	mongoClient, err := connectMongoDB()
+	if err != nil {
+		logger.Error(fmt.Sprintf("Failed to connect to MongoDB: %v", err))
+		os.Exit(1)
+	}
 
 	return &Server{
-		Router: router,
-		Logger: logger,
-		Config: config,
-		// MongoClient: mongoClient,
-		Validator: *validator.New(),
+		Router:      router,
+		Logger:      logger,
+		Config:      config,
+		MongoClient: mongoClient,
+		Validator:   *validator.New(),
 	}
 }
 
-// func connectMongoDB() (*mongo.Client, error) {
-// 	uri := config.Env.Mongo_Uri
-// 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-// 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
-// 	client, err := mongo.Connect(context.TODO(), opts)
-// 	if err != nil {
-// 		log.Fatalf("Failed to connect to MongoDB: %v", err)
-// 		return nil, err
-// 	}
-// 	// Check the connection
-// 	err = client.Ping(context.TODO(), nil)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return client, nil
-// }
+func connectMongoDB() (*mongo.Client, error) {
+	uri := config.Env.Mongo_Uri
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
+	client, err := mongo.Connect(context.TODO(), opts)
+	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
+		return nil, err
+	}
+	// Check the connection
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
 
 func (s *Server) RegisterMiddlewares() {
 	s.Router.Use(s.setHeaders)
