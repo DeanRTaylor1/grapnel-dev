@@ -19,7 +19,7 @@ func ServeAbout(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 	}
 
 	data := PageData{
-		Title: "Sys.D Solutions - About",
+		Title: "Grapnel Solutions - About",
 	}
 
 	SetCacheHeaders(w, ContentTypeHTML, constants.CacheDuration, "About-Page")
