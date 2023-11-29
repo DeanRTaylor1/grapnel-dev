@@ -21,7 +21,7 @@ func ServeHome(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 	data := PageData{
-		Title: "Sys.D Solutions - Home",
+		Title: "Grapnel - Home",
 	}
 
 	w.Header().Set("Content-Type", ContentTypeHTML)

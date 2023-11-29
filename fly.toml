@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for sys-d on 2023-11-25T08:01:12+07:00
+# fly.toml app configuration file generated for grapnel on 2023-11-29T12:23:57+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "sys-d"
+app = "grapnel"
 primary_region = "sin"
 
 [build]

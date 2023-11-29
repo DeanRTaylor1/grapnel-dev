@@ -24,7 +24,7 @@ func ServeContact(w http.ResponseWriter, r *http.Request, logger *logger.Logger)
 	}
 
 	data := PageData{
-		Title: "Sys.D Solutions - Contact Us",
+		Title: "Grapnel - Contact Us",
 	}
 
 	SetCacheHeaders(w, ContentTypeHTML, constants.CacheDuration, "contact-html")

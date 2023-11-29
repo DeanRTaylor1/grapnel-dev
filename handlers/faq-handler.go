@@ -19,7 +19,7 @@ func ServeFaq(w http.ResponseWriter, r *http.Request, logger *logger.Logger) {
 	}
 
 	data := PageData{
-		Title: "Sys.D Solutions - FAQ",
+		Title: "Grapnel - FAQ",
 	}
 
 	SetCacheHeaders(w, ContentTypeHTML, constants.CacheDuration, "Faq-Html")

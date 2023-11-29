@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -88,6 +89,7 @@ func connectMongoDB() (*mongo.Client, error) {
 	uri := config.Env.Mongo_Uri
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
+		log.Fatalf("Failed to connect to MongoDB: %v", err)
 		return nil, err
 	}
 	// Check the connection
